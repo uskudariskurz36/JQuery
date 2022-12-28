@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <!-- FontAwesome 6.2.0 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .img {
+            transition: all 0.6s;
+            cursor: pointer;
+        }
+
+        .img:hover {
+            transform: scaleX(2.6) scaleY(2.6);
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- .row>.col>(h1.display-4>lorem3)+hr -->
+        <div class="row mb-3">
+            <div class="col">
+                <h1 class="display-4">AJAX Operations 3</h1>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+
+                <button class="btn btn-primary" type="button" onclick="loadAlbums()">Get Albums</button>
+
+                <select id="albums" class="form-select mt-2" onchange="albumSelected()">
+                    <option value="1">John Doe</option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2 class="mt-2">Album Photos</h2>
+                <hr>
+                <div id="images" class="row">
+                    <div class="col-12">
+                        <i class="fa fa-sync fa-spin me-2"></i>loading..
+                    </div>
+                    <div class="col-2 mb-2">
+                        <img src="https://via.placeholder.com/150/b4412f" class="img-thumbnail img" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // https://jsonplaceholder.typicode.com/users/1/todos
+
+        function loadAlbums() {
+
+            $("#albums").empty();
+
+            $.get("https://jsonplaceholder.typicode.com/albums", function (albums, status) {
+                for (let i = 0; i < albums.length; i++) {
+                    var album = albums[i];
+
+                    var item = $(`<option value="${album.id}">${album.title.toUpperCase()}</option>`);
+                    $("#albums").append(item);
+                }
+            });
+        }
+
+        function albumSelected() {
+            var albumid = $("#albums").val();
+            var url = `https://jsonplaceholder.typicode.com/photos?albumId=${albumid}`;
+
+            $("#images").empty();
+            $("#images").append(`<div class="col-12">
+                        <i class="fa fa-sync fa-spin me-2"></i>loading..
+                    </div>`);
+
+            $.get(url, function (photos, status) {
+                if (status == "success") {
+                    $("#images").empty();
+
+                    for (var i = 0; i < photos.length; i++) {
+                        var photo = photos[i];
+                        var item = $(`<div class="col-2 mb-2">
+                                        <img src="${photo.thumbnailUrl}" alt="${photo.title}" class="img-thumbnail img" />
+                                    </div>`);
+                        $("#images").append(item);
+                    }
+                }
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
