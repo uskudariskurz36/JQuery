@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <!-- FontAwesome 6.2.0 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- .row>.col>(h1.display-4>lorem3)+hr -->
+        <div class="row mb-3">
+            <div class="col">
+                <h1 class="display-4">AJAX Operations 5</h1>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <input id="name" type="text" class="form-control mb-2" placeholder="name" />
+                <input id="desc" type="text" class="form-control mb-2" placeholder="description" />
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="button" onclick="add()">Add</button>
+            </div>
+            <div class="col-12 mt-5">
+                <h2>Categories</h2>
+                <hr>
+                <ul id="categories" class="list-group mt-2" style="display:flex;flex-direction: column-reverse;">
+                    <li class="list-group-item">Lorem, ipsum.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        function add() {
+
+            var name = $("#name").val();
+            var desc = $("#desc").val();
+
+            var data = {
+                "description": desc,
+                "name": name
+            };
+
+            var url = "https://northwind.vercel.app/api/categories";
+
+            $.post(url, data, function (res, status) {
+                console.log(res);
+                console.log(status);
+
+                $("#categories").empty();
+
+                $.get(url, function (cats, status) {
+                    for (let i = 0; i < cats.length; i++) {
+                        const cat = cats[i];
+                        var item =
+                            `<li class="list-group-item">
+                                ${cat.name}<br><small class="text-muted">${cat.description}</small>
+                            </li>`;
+
+                        $("#categories").append(item);
+                    }
+                });
+            });
+        }
+
+        setInterval(function () {
+            $("#categories").empty();
+
+            $.get("https://northwind.vercel.app/api/categories", function (cats, status) {
+                for (let i = 0; i < cats.length; i++) {
+                    const cat = cats[i];
+                    var item =
+                        `<li class="list-group-item">
+                            ${cat.name}<br><small class="text-muted">${cat.description}</small>
+                        </li>`;
+
+                    $("#categories").append(item);
+                }
+            });
+        }, 2000);
+
+    </script>
+
+</body>
+
+</html>
