@@ -29,10 +29,10 @@
 
                 <button class="btn btn-primary" type="button" onclick="loadData()">Get Data</button>
 
-                <select id="list" class="form-select mt-2">
+                <select id="list" class="form-select mt-2" onchange="userSelected()">
                     <option value="1">John Doe</option>
                 </select>
-                
+
                 <h2 class="mt-2">User Todos</h2>
                 <hr>
                 <ul id="todos" class="list-group mt-2">
@@ -44,7 +44,7 @@
 
     </div>
 
-    
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
         integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
@@ -63,7 +63,7 @@
         // https://jsonplaceholder.typicode.com/users/1/todos
 
         function loadData() {
-            
+
             $("#list").empty();
 
             $.get("https://jsonplaceholder.typicode.com/users", function (res, status) {
@@ -77,6 +77,25 @@
 
             });
         }
+
+        function userSelected() {
+            var userid = $("#list").val();
+            var url = `https://jsonplaceholder.typicode.com/users/${userid}/todos`;
+
+            $("#todos").empty();
+
+            $.get(url, function (res, status) {
+                if (status == "success") {
+                    for (var i = 0; i < res.length; i++){
+                        var todo = res[i];
+                        var item = $(`<li class='list-group-item'>${todo.title}</li>`);
+                        $("#todos").append(item);
+                    }
+                }
+            });
+
+        }
+
     </script>
 
 </body>
